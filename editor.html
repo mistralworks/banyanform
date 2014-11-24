@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="" ng-app="editorApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Form Editor</title>
+    <link rel="shortcut icon" href="">
+    <link rel="stylesheet" href="css/bootstrap.css">
+
+
+    <script src="vendor/libs/guid.js"></script>
+    <script src="vendor/angular/angular.js"></script>
+
+
+    <script src="scripts/editor.js"></script>
+
+    <!--[if IE]>
+        <script src="https://cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <h2>Form Generator</h2>
+    <div ng-controller="EditorController">
+        <div class="form-horizontal">
+            <div class="form-group">
+            <label class=""
+            </div>
+        </div>
+        <span>{{questions.length}} questions</span>
+
+        <div>
+            <div class="container" ng-repeat="question in questions">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Pertanyaan :</label>
+                                <div class="col-md-4">
+                                    <input type="text" value="{{question.title}}" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Bantuan :</label>
+                                <div class="col-md-4">
+                                    <input type="text" value="{{question.help}}" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-offset-3" class="form-group" ng-if="question.type._id == 1">
+                                <input disabled placeholder="answer here" />
+                            </div>
+                            <div class="col-md-offset-3" class="form-group" ng-if="question.type._id == 2">
+                                <textarea disabled></textarea>
+                            </div>
+                            <div class="form-group" ng-if="question.type._id == 3">
+                                <div class="col-md-offset-3" ng-repeat="opt in question.options">
+                                    <div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="radio" name="{{opt.name}}">{{opt.text}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-if="question.type._id == 4">
+                                <div class="col-md-offset-3" ng-repeat="opt in question.options">
+                                    <div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name="{{opt.name}}">{{opt.text}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-offset-3" class="form-group" ng-if="question.type._id == 5">
+                                <input disabled placeholder="25/11/2015" />
+                            </div>
+                            <div class="col-md-offset-3" class="form-group" ng-if="question.type._id == 6">
+                                <input disabled placeholder="08:00" />
+                            </div>
+                            <input type="checkbox" disabled ng-model="question.is_required" />Required
+                            <button type="button" class="btn btn-danger" ng-click="delete($index)">delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form ng-submit="addQuestion()">
+                    <div class="form-group">
+                        <input type="text" ng-model="newQuestionText" size="30" placeholder="add new question">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" ng-model="newHelpText" size="30" placeholder="add new help text">
+                    </div>
+                    <div>
+                        <select ng-model="newQuestionType" ng-options="type.name for type in questionTypes" ng-change="onNewQuestionTypeChanged()"></select>
+                    </div>
+                    <div class="form-group" ng-if="newQuestionTypeId == 1">
+                        <input disabled placeholder="answer here" />
+                    </div>
+                    <div class="form-group" ng-if="newQuestionTypeId == 2">
+                        <textarea disabled></textarea>
+                    </div>
+                    <div class="form-group" ng-if="newQuestionTypeId == 3">
+                        <div ng-repeat="opt in newOptions">
+                            <div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="radio" name="{{opt.name}}">{{opt.text}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="text" ng-enter="addOption()" placeholder="new option" ng-model="$parent.newOption" />
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="newQuestionTypeId == 4">
+                        <div ng-repeat="opt in newOptions">
+                            <div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="{{opt.name}}">{{opt.text}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="text" ng-enter="addOption()" placeholder="new option" ng-model="$parent.newOption" />
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="newQuestionTypeId == 5">
+                        <div>
+                            <input disabled type="text" placeholder="12/22/2014">
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="newQuestionTypeId == 6">
+                        <div>
+                            <input type="text" disabled placeholder="08:00">
+                        </div>
+                    </div>
+                    <div>
+                        <input type="checkbox" ng-model="newIsRequired" />Required
+                    </div>
+                    <input class="btn-primary" type="submit" value="add">
+                </form>
+            </div>
+        </div>
+        <hr />
+        <button type="button" ng-click="onGenerateJsonClick()">Generate JSON</button>
+        <div class="panel panel-default">
+            <textarea>{{jsonresult}}</textarea>
+        </div>
+    </div>
+
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/jquery/bootstrap.js"></script>
+</body>
+
+</html>
