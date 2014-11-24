@@ -9,7 +9,8 @@
     <title>Form Editor</title>
     <link rel="shortcut icon" href="">
     <link rel="stylesheet" href="css/bootstrap.css">
-
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/editor.css">
 
     <script src="vendor/libs/guid.js"></script>
     <script src="vendor/angular/angular.js"></script>
@@ -24,145 +25,180 @@
 </head>
 
 <body>
-    <h2>Form Generator</h2>
-    <div ng-controller="EditorController">
-        <div class="form-horizontal">
-            <div class="form-group">
-            <label class=""
-            </div>
-        </div>
-        <span>{{questions.length}} questions</span>
+    <div class="container">
+        <h2>Form Generator</h2>
 
-        <div>
-            <div class="container" ng-repeat="question in questions">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-
-                        <form class="form-horizontal">
-                            <div class="form-group">
-                                <label class="control-label col-md-3">Pertanyaan :</label>
-                                <div class="col-md-4">
-                                    <input type="text" value="{{question.title}}" class="form-control" />
-                                </div>
+        <div ng-controller="EditorController">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input class="form-control" type="text" placeholder="TITLE" ng-model="formTitle" />
                             </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-md-3">Bantuan :</label>
-                                <div class="col-md-4">
-                                    <input type="text" value="{{question.help}}" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-md-offset-3" class="form-group" ng-if="question.type._id == 1">
-                                <input disabled placeholder="answer here" />
-                            </div>
-                            <div class="col-md-offset-3" class="form-group" ng-if="question.type._id == 2">
-                                <textarea disabled></textarea>
-                            </div>
-                            <div class="form-group" ng-if="question.type._id == 3">
-                                <div class="col-md-offset-3" ng-repeat="opt in question.options">
-                                    <div>
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="radio" name="{{opt.name}}">{{opt.text}}
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group" ng-if="question.type._id == 4">
-                                <div class="col-md-offset-3" ng-repeat="opt in question.options">
-                                    <div>
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" name="{{opt.name}}">{{opt.text}}
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-offset-3" class="form-group" ng-if="question.type._id == 5">
-                                <input disabled placeholder="25/11/2015" />
-                            </div>
-                            <div class="col-md-offset-3" class="form-group" ng-if="question.type._id == 6">
-                                <input disabled placeholder="08:00" />
-                            </div>
-                            <input type="checkbox" disabled ng-model="question.is_required" />Required
-                            <button type="button" class="btn btn-danger" ng-click="delete($index)">delete</button>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <form ng-submit="addQuestion()">
-                    <div class="form-group">
-                        <input type="text" ng-model="newQuestionText" size="30" placeholder="add new question">
-                    </div>
-                    <div class="form-group">
-                        <input type="text" ng-model="newHelpText" size="30" placeholder="add new help text">
-                    </div>
-                    <div>
-                        <select ng-model="newQuestionType" ng-options="type.name for type in questionTypes" ng-change="onNewQuestionTypeChanged()"></select>
-                    </div>
-                    <div class="form-group" ng-if="newQuestionTypeId == 1">
-                        <input disabled placeholder="answer here" />
-                    </div>
-                    <div class="form-group" ng-if="newQuestionTypeId == 2">
-                        <textarea disabled></textarea>
-                    </div>
-                    <div class="form-group" ng-if="newQuestionTypeId == 3">
-                        <div ng-repeat="opt in newOptions">
-                            <div>
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="radio" name="{{opt.name}}">{{opt.text}}
-                                    </label>
+            <div class="row">
+                <div class="col-md-offset-3 col-md-6">
+                    <span class="text-center">{{questions.length}} questions</span>
+                </div>
+            </div>
+            <div class="row">
+                <div ng-repeat="question in questions | orderBy:predicate">
+                    <div class="col-md-offset-3 col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="btn-group pull-right" role="group">
+                                    <button type="button" class="btn btn-default btn-sm" ng-click="onIndexUpClick($index)"><i class="fa fa-chevron-up"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-sm" ng-click="onIndexDownClick($index)"><i class="fa fa-chevron-down"></i>
+                                    </button>
                                 </div>
+                                <br />
+                                <br />
+                                <!--                                <div class="clearfix"></div>-->
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Pertanyaan :</label>
+                                        <div class="col-md-9">
+                                            <input type="text" value="{{question.title}}" class="form-control" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Bantuan :</label>
+                                        <div class="col-md-9">
+                                            <input type="text" value="{{question.help}}" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-offset-3" class="form-group" ng-if="question.type._id == 1">
+                                        <input disabled placeholder="answer here" />
+                                    </div>
+                                    <div class="col-md-offset-3" class="form-group" ng-if="question.type._id == 2">
+                                        <textarea disabled></textarea>
+                                    </div>
+                                    <div class="form-group" ng-if="question.type._id == 3">
+                                        <div class="col-md-offset-3" ng-repeat="opt in question.options">
+                                            <div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="radio" name="{{opt.name}}">{{opt.text}}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-if="question.type._id == 4">
+                                        <div class="col-md-offset-3" ng-repeat="opt in question.options">
+                                            <div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" name="{{opt.name}}">{{opt.text}}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-offset-3" class="form-group" ng-if="question.type._id == 5">
+                                        <input disabled placeholder="25/11/2015" />
+                                    </div>
+                                    <div class="col-md-offset-3" class="form-group" ng-if="question.type._id == 6">
+                                        <input disabled placeholder="08:00" />
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-3 col-sm-9">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" ng-model="question.is_required">Required
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" ng-click="onUpdateClick($index)">update</button>
+                                    <button type="button" class="btn btn-danger" ng-click="onDeleteClick($index)">delete</button>
+
+                                </form>
                             </div>
                         </div>
-                        <div>
-                            <input type="text" ng-enter="addOption()" placeholder="new option" ng-model="$parent.newOption" />
-                        </div>
                     </div>
-                    <div class="form-group" ng-if="newQuestionTypeId == 4">
-                        <div ng-repeat="opt in newOptions">
-                            <div>
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="{{opt.name}}">{{opt.text}}
-                                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-offset-3 col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <form ng-submit="addQuestion()">
+                                <div class="form-group">
+                                    <input type="text" ng-model="newQuestionText" size="30" placeholder="add new question">
                                 </div>
-                            </div>
-                        </div>
-                        <div>
-                            <input type="text" ng-enter="addOption()" placeholder="new option" ng-model="$parent.newOption" />
+                                <div class="form-group">
+                                    <input type="text" ng-model="newHelpText" size="30" placeholder="add new help text">
+                                </div>
+                                <div>
+                                    <select ng-model="newQuestionType" ng-options="type.name for type in questionTypes" ng-change="onNewQuestionTypeChanged()"></select>
+                                </div>
+                                <div class="form-group" ng-if="newQuestionTypeId == 1">
+                                    <input disabled placeholder="answer here" />
+                                </div>
+                                <div class="form-group" ng-if="newQuestionTypeId == 2">
+                                    <textarea disabled></textarea>
+                                </div>
+                                <div class="form-group" ng-if="newQuestionTypeId == 3">
+                                    <div ng-repeat="opt in newOptions">
+                                        <div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="radio" name="{{opt.name}}"> {{opt.text}} <a  ng-click="onRemoveNewOptionsClick($index)"><i class="fa fa-close"></i></a>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <input type="text" ng-enter="addOption()" placeholder="new option" ng-model="$parent.newOption" />
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-if="newQuestionTypeId == 4">
+                                    <div ng-repeat="opt in newOptions">
+                                        <div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="{{opt.name}}"> {{opt.text}} <a  ng-click="onRemoveNewOptionsClick($index)"><i class="fa fa-close"></i></a>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <input type="text" ng-enter="addOption()" placeholder="new option" ng-model="$parent.newOption" />
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-if="newQuestionTypeId == 5">
+                                    <div>
+                                        <input disabled type="text" placeholder="12/22/2014">
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-if="newQuestionTypeId == 6">
+                                    <div>
+                                        <input type="text" disabled placeholder="08:00">
+                                    </div>
+                                </div>
+                                <div>
+                                    <input type="checkbox" ng-model="newIsRequired" />Required
+                                </div>
+                                <input class="btn btn-primary" type="submit" value="add">
+                            </form>
                         </div>
                     </div>
-                    <div class="form-group" ng-if="newQuestionTypeId == 5">
-                        <div>
-                            <input disabled type="text" placeholder="12/22/2014">
-                        </div>
-                    </div>
-                    <div class="form-group" ng-if="newQuestionTypeId == 6">
-                        <div>
-                            <input type="text" disabled placeholder="08:00">
-                        </div>
-                    </div>
-                    <div>
-                        <input type="checkbox" ng-model="newIsRequired" />Required
-                    </div>
-                    <input class="btn-primary" type="submit" value="add">
-                </form>
+                </div>
+            </div>
+            <hr />
+            <button type="button" ng-click="onGenerateJsonClick()">Generate JSON</button>
+            <div class="panel panel-default">
+                <textarea class="form-control" style="height: 500px;">{{jsonresult}}</textarea>
             </div>
         </div>
-        <hr />
-        <button type="button" ng-click="onGenerateJsonClick()">Generate JSON</button>
-        <div class="panel panel-default">
-            <textarea>{{jsonresult}}</textarea>
-        </div>
     </div>
-
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/jquery/bootstrap.js"></script>
 </body>
