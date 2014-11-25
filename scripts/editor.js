@@ -33,6 +33,28 @@ var app = angular.module('editorApp', [])
                 }
             ];
 
+            $scope.types = [
+                {
+                    name: 'form',
+                    _id: 1
+                },
+                {
+                    name: 'survey',
+                    _id: 2
+                }
+            ];
+
+            $scope.presentationTypes = [
+                {
+                    name: 'All in one page',
+                    _id: 1
+                },
+                {
+                    name: 'One in one page',
+                    _id: 2
+                }
+            ];
+
             $scope.predicate = 'index';
             $scope.newQuestionType = $scope.questionTypes[0];
 
@@ -114,6 +136,7 @@ var app = angular.module('editorApp', [])
             }
 
             $scope.onGenerateJsonClick = function () {
+
                 $scope.jsonresult = JSON.stringify({
                     title: $scope.formTitle,
                     questions: $scope.questions
